@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        <h1>Generate New Timetable</h1>
+        
+        <div class="alert alert-info mb-4">
+            <h4 class="alert-heading">Before You Generate</h4>
+            <p>Please make sure you have:</p>
+            <ul>
+                <li><a href="{{ url_for('teachers.list_teachers') }}">Added all teachers</a> and set their availabilities</li>
+                <li><a href="{{ url_for('courses.list_courses') }}">Added all courses</a> and assigned teachers to them</li>
+                <li><a href="{{ url_for('rooms.list_rooms') }}">Added all available rooms</a></li>
+                <li><a href="{{ url_for('schedules.manage_timeslots') }}">Added all time slots</a></li>
+            </ul>
+            <p>Generating a new schedule for an existing semester will replace the old schedule.</p>
+        </div>
+        
+        <form method="post" novalidate>
+            {{ form.hidden_tag() }}
+            <div class="mb-3">
+                {{ form.semester.label(class="form-label") }}
+                {{ form.semester(class="form-control") }}
+                {% for error in form.semester.errors %}
+                <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+                <div class="form-text">Enter a descriptive name such as "Fall 2023" or "Spring 2024"</div>
+            </div>
+            {{ form.submit(class="btn btn-primary") }}
+            <a href="{{ url_for('schedules.list_schedules') }}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

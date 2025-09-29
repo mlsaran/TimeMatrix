@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Schedules</h1>
+    <a href="{{ url_for('schedules.generate_schedule') }}" class="btn btn-success">Generate New Schedule</a>
+</div>
+
+{% if semesters %}
+<div class="mb-4">
+    <form method="get" class="row g-3">
+        <div class="col-auto">
+            <label for="semester" class="form-label">Select Semester:</label>
+        </div>
+        <div class="col-auto">
+            <select name="semester" id="semester" class="form-select" onchange="this.form.submit()">
+                {% for semester in semesters %}
+                <option value="{{ semester }}" {% if semester == selected_semester %}selected{% endif %}>{{ semester }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </form>
+</div>
+
+{% if schedules %}
+    <!-- Debug info -->
+    <div class="alert alert-info">
+        <strong>Debug Info:</strong> Found {{ schedules|length }} schedule entries for {{ selected_semester }}
+    </div>
+    
+    {% set days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'] %}
+    {% set displayed_schedules = false %}
+
+    <!-- Loop through each day -->
+    {% for day_num in range(7) %}
+        {% set day_schedules = [] %}
+        
+        <!-- Find schedules for this day -->
+        {% for schedule in schedules %}
+            {% if schedule.time_slot_id %}
+                {% set ts = schedule.time_slot_ref if schedule.time_slot_ref else None %}
+                {% if ts and ts.day_of_week == day_num %}
+                    {% set day_schedules = day_schedules + [schedule] %}
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+        
+        <!-- Display schedules for this day if any -->
+        {% if day_schedules|length > 0 %}
+            {% set displayed_schedules = true %}
+            <h3>{{ days[day_num] }}</h3>
+            <div class="table-responsive mb-4">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Course</th>
+                            <th>Teacher</th>
+                            <th>Room</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for schedule in day_schedules %}
+                            <tr>
+                                <td>
+                                    {% if schedule.time_slot_ref %}
+                                        {{ schedule.time_slot_ref.start_time.strftime('%H:%M') }} - {{ schedule.time_slot_ref.end_time.strftime('%H:%M') }}
+                                    {% else %}
+                                        Unknown Time
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if schedule.course_ref %}
+                                        {{ schedule.course_ref.code }}: {{ schedule.course_ref.name }}
+                                    {% else %}
+                                        Unknown Course
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if schedule.course_ref and schedule.course_ref.teacher %}
+                                        {{ schedule.course_ref.teacher.name }}
+                                    {% else %}
+                                        N/A
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if schedule.room_ref %}
+                                        {{ schedule.room_ref.name }}
+                                    {% else %}
+                                        Unknown Room
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+    {% endfor %}
+
+    {% if not displayed_schedules %}
+        <div class="alert alert-warning">
+            <h4 class="alert-heading">No schedule data to display</h4>
+            <p>The database shows {{ schedules|length }} schedule entries, but they could not be properly displayed. This might be due to:</p>
+            <ul>
+                <li>Missing or invalid relationships between tables</li>
+                <li>Invalid time slot data</li>
+            </ul>
+            <p>Try running the relationship fixing script or generating a new schedule.</p>
+            <hr>
+            <a href="{{ url_for('schedules.generate_schedule') }}" class="btn btn-primary">Generate New Schedule</a>
+        </div>
+    {% endif %}
+{% else %}
+    <div class="alert alert-info">No schedules found for the selected semester.</div>
+{% endif %}
+
+{% else %}
+<div class="alert alert-warning">
+    <h4 class="alert-heading">No schedules have been generated yet.</h4>
+    <p>Before generating a schedule, make sure you have:</p>
+    <ul>
+        <li>Added <a href="{{ url_for('teachers.list_teachers') }}">teachers</a> and their availability</li>
+        <li>Added <a href="{{ url_for('courses.list_courses') }}">courses</a> and assigned teachers</li>
+        <li>Added <a href="{{ url_for('rooms.list_rooms') }}">rooms</a></li>
+        <li>Added <a href="{{ url_for('schedules.manage_timeslots') }}">time slots</a></li>
+    </ul>
+    <hr>
+    <a href="{{ url_for('schedules.generate_schedule') }}" class="btn btn-primary">Generate a new schedule</a>
+</div>
+{% endif %}
+{% endblock %}

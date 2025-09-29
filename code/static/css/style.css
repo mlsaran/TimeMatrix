@@ -1,0 +1,57 @@
+/* Custom styles for Smart Timetable */
+
+/* Make the jumbotron match Bootstrap 5 styling */
+.jumbotron {
+    padding: 2rem 1rem;
+    margin-bottom: 2rem;
+    background-color: #e9ecef;
+    border-radius: 0.3rem;
+}
+
+/* Additional styling for tables */
+.table-responsive {
+    margin-bottom: 1rem;
+}
+
+/* Dashboard cards */
+.card {
+    transition: transform 0.2s ease;
+    margin-bottom: 1rem;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* Styling for time slots in the schedule view */
+.time-slot {
+    background-color: #f8f9fa;
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+    border-radius: 0.25rem;
+    border: 1px solid #dee2e6;
+}
+
+/* Make form labels bold */
+.form-label {
+    font-weight: 500;
+}
+
+/* Alerts */
+.alert {
+    border-radius: 0.25rem;
+    padding: 1rem;
+}
+
+/* Add some spacing in forms */
+form .btn {
+    margin-right: 0.5rem;
+}
+
+/* Make sure tables don't overflow on mobile */
+@media (max-width: 768px) {
+    .table-responsive {
+        overflow-x: auto;
+    }
+}

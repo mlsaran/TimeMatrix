@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="jumbotron">
+    <h1 class="display-4">Welcome to Smart Timetable</h1>
+    <p class="lead">An intelligent scheduling system for educational institutions.</p>
+    <hr class="my-4">
+    <p>Smart Timetable helps you create conflict-free schedules for courses, teachers, and rooms.</p>
+    
+    {% if current_user.is_authenticated %}
+    <div class="row mt-4">
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Manage Teachers</h5>
+                    <p class="card-text">Add, edit, and manage teacher information and availability.</p>
+                    <a href="{{ url_for('teachers.list_teachers') }}" class="btn btn-primary">Go to Teachers</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Manage Courses</h5>
+                    <p class="card-text">Add, edit, and manage course information.</p>
+                    <a href="{{ url_for('courses.list_courses') }}" class="btn btn-primary">Go to Courses</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Manage Rooms</h5>
+                    <p class="card-text">Add, edit, and manage room information.</p>
+                    <a href="{{ url_for('rooms.list_rooms') }}" class="btn btn-primary">Go to Rooms</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mt-2">
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Time Slots</h5>
+                    <p class="card-text">Define time slots for your schedule.</p>
+                    <a href="{{ url_for('schedules.manage_timeslots') }}" class="btn btn-primary">Manage Time Slots</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Generate Schedule</h5>
+                    <p class="card-text">Create a new optimized schedule.</p>
+                    <a href="{{ url_for('schedules.generate_schedule') }}" class="btn btn-success">Generate Timetable</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">View Schedules</h5>
+                    <p class="card-text">View and manage generated schedules.</p>
+                    <a href="{{ url_for('schedules.list_schedules') }}" class="btn btn-primary">View Schedules</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <p class="mt-4">Please <a href="{{ url_for('auth.login') }}">login</a> or <a href="{{ url_for('auth.register') }}">register</a> to use the system.</p>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        <h1>Add Room</h1>
+        <form method="post" novalidate>
+            {{ form.hidden_tag() }}
+            <div class="mb-3">
+                {{ form.name.label(class="form-label") }}
+                {{ form.name(class="form-control") }}
+                {% for error in form.name.errors %}
+                <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
+            <div class="mb-3">
+                {{ form.capacity.label(class="form-label") }}
+                {{ form.capacity(class="form-control", type="number") }}
+                {% for error in form.capacity.errors %}
+                <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
+            <div class="mb-3">
+                {{ form.building.label(class="form-label") }}
+                {{ form.building(class="form-control") }}
+                {% for error in form.building.errors %}
+                <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
+            <div class="mb-3 form-check">
+                {{ form.has_projector(class="form-check-input") }}
+                {{ form.has_projector.label(class="form-check-label") }}
+            </div>
+            {{ form.submit(class="btn btn-primary") }}
+            <a href="{{ url_for('rooms.list_rooms') }}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

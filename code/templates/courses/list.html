@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Courses</h1>
+    <a href="{{ url_for('courses.add_course') }}" class="btn btn-success">Add Course</a>
+</div>
+
+{% if courses %}
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Code</th>
+                <th>Name</th>
+                <th>Teacher</th>
+                <th>Credit Hours</th>
+                <th>Sessions/Week</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for course in courses %}
+            <tr>
+                <td>{{ course.code }}</td>
+                <td>{{ course.name }}</td>
+                <td>{{ course.teacher.name if course.teacher else 'N/A' }}</td>
+                <td>{{ course.credit_hours }}</td>
+                <td>{{ course.sessions_per_week }}</td>
+                <td>
+                    <a href="{{ url_for('courses.edit_course', id=course.id) }}" class="btn btn-sm btn-primary">Edit</a>
+                    <a href="{{ url_for('courses.delete_course', id=course.id) }}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this course?')">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<p>No courses found. <a href="{{ url_for('courses.add_course') }}">Add one</a>.</p>
+{% endif %}
+{% endblock %}
